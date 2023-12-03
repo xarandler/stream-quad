@@ -30,7 +30,6 @@ def solve_quadratic(a,b,c):
 		return (f"$$x_1 = {Re} + {Im}i$$<br>$$x_2 = {Re} - {Im}i$$")
 
 
-
 # Streamlit app
 st.title('Quadratic Equation Solver')
 #Image

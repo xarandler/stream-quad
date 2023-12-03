@@ -1,51 +1,57 @@
-# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022)
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import streamlit as st
-from streamlit.logger import get_logger
+import numpy as np
+from PIL import Image
 
-LOGGER = get_logger(__name__)
+image = Image.open('img/quad_img.png')
 
+# def solve_quadratic(a, b, c):
+#     # Calculate the discriminant
+#     D = b**2 - 4*a*c
+#     # Compute the two solutions
+#     sol1 = (-b - np.sqrt(D)) / (2*a)
+#     sol2 = (-b + np.sqrt(D)) / (2*a)
+#     return sol1, sol2
 
-def run():
-    st.set_page_config(
-        page_title="Hello",
-        page_icon="👋",
-    )
-
-    st.write("# Welcome to Streamlit! 👋")
-
-    st.sidebar.success("Select a demo above.")
-
-    st.markdown(
-        """
-        Streamlit is an open-source app framework built specifically for
-        Machine Learning and Data Science projects.
-        **👈 Select a demo from the sidebar** to see some examples
-        of what Streamlit can do!
-        ### Want to learn more?
-        - Check out [streamlit.io](https://streamlit.io)
-        - Jump into our [documentation](https://docs.streamlit.io)
-        - Ask a question in our [community
-          forums](https://discuss.streamlit.io)
-        ### See more complex demos
-        - Use a neural net to [analyze the Udacity Self-driving Car Image
-          Dataset](https://github.com/streamlit/demo-self-driving)
-        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
-    """
-    )
+def solve_quadratic(a,b,c):
+	x1 = 0.0
+	x2 = 0.0
+	d = (b**2 - 4*a*c)
+	#2 real solutions
+	if d > 0:
+		x1 = (-b + np.sqrt(d))/(2*a)
+		x2 = (-b - np.sqrt(d))/(2*a)
+		return (f"x1 = {x1}<br>x2 = {x2}")
+	elif d == 0:
+		x1 = (-b)/(2*a)
+		return (f"x1 & x2 = {x1}")
+	else:
+		Re = (-b)/(2*a)
+		Im = np.sqrt(-d)/(2*a)
+		return (f"$$x_1 = {Re} + {Im}i$$<br>$$x_2 = {Re} - {Im}i$$")
 
 
-if __name__ == "__main__":
-    run()
+
+# Streamlit app
+st.title('Quadratic Equation Solver')
+#Image
+st.image(image, caption='Mathematical Elegance')
+
+# Getting user input
+a = st.number_input('Enter coefficient a', value=1.0)
+b = st.number_input('Enter coefficient b', value=0.0)
+c = st.number_input('Enter coefficient c', value=0.0)
+
+# Solve button
+if st.button('Solve'):
+    # Handle cases where the equation is not quadratic
+    if a == 0:
+        st.error("Coefficient a cannot be zero for a quadratic equation.")
+    else:
+        try:
+            sol = solve_quadratic(a, b, c)
+            st.markdown(f"The solutions are:<br> {sol}", unsafe_allow_html=True)
+        except ValueError as e:
+            st.error(f"Error: {e}")
+
+# Instructions for running the app
+st.sidebar.write("To run this app, use the command: `streamlit run your_script_name.py`")
